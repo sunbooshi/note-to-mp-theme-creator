@@ -1,0 +1,14 @@
+{
+  "name": "lint-theme",
+  "version": "1.0.0",
+  "main": "lint.js",
+  "scripts": {
+    "lint": "node lint.js"
+  },
+  "author": "sunbooshi",
+  "license": "ISC",
+  "description": "lint theme for article-theme-skill",
+  "dependencies": {
+    "less": "^4.8.1"
+  }
+}
