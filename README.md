@@ -50,7 +50,9 @@ https://github.com/sunbooshi/note-to-mp-theme-creator
 
 **效果**：
 
-<h2 style="color: rgb(7, 84, 194); font-weight: bold; font-size: 1.25em; line-height: 1.5em; margin-block: 1em 0px; border-left: 4px solid rgb(14, 124, 255); background-color: rgba(14, 124, 255, 0.08); padding: 0.6em 0.8em; border-radius: 0px 8px 8px 0px; margin: 1.6em 0px 1em;">第二级标题</h2>
+<img width="470" height="99" alt="Image" src="https://github.com/user-attachments/assets/291a0e98-0afe-4026-a187-193869907194" />
+
+
 
 ### 自定义复杂标题样式
 **提示词**：
@@ -79,7 +81,7 @@ https://github.com/sunbooshi/note-to-mp-theme-creator
 ```
 
 **效果**：
-<h2 style="color: rgb(15, 23, 42); font-weight: 600; font-size: 1.602em; line-height: 1.2; margin-block: 1em 0px; text-align: center; margin: 2em 0px 1.5em;"><strong style="color: rgb(14, 124, 255); font-weight: bold; display: block; font-size: 2em; line-height: 1.3em; letter-spacing: 0.1em;">02</strong>第二级标题</h2>
+<img width="442" height="126" alt="Image" src="https://github.com/user-attachments/assets/f1f7f9e6-594a-4d2c-8d3a-ae53f1a09804" />
 
 ## 图片
 **提示词**：
