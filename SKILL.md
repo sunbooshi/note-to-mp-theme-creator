@@ -1,7 +1,7 @@
 ---
 name: note-to-mp-theme-creator
 description: 创建NoteToMP插件的自定义主题
-version: 1.0.0
+version: 1.1.0
 ---
 ## 规范
 - 使用less语法
@@ -100,6 +100,16 @@ Skill 根目录（本文件所在目录）记为 $SKILL
 - 可选 `--strict` 参数：额外执行完整编译（less.render），可发现编译期错误
 - 若检查失败，根据报错信息（含行号）修复主题，然后重新检查，直到通过
 
+## 预览样式
+Skill 根目录记为 $SKILL。生成主题后，可生成 HTML 预览页查看实际效果：
+
+- 运行：`node $SKILL/scripts/preview.js <主题文件> [选项]`
+  - 主题文件支持 `.less` 或含 ```less 代码块的 `.md`，可传多个按顺序覆盖
+  - 基础样式固定为 `references/theme-full.md`，用户样式编译后追加其后覆盖基础样式
+  - 常用选项：`-o <file>` 指定输出（默认 `preview.html`）、`--open` 生成后自动打开
+- 原理：Less 编译基础样式与用户样式，将 CSS 内嵌到 HTML，正文使用 `scripts/template.html`
+- 若用户有自己的样式文件，直接作为参数传入即可，无需手动合并
+
 ### 生成前准备（最高优先级）
 在构思任何样式之前，**必须**执行以下操作：
 1. 读取 `references/variables.md` 获取所有可用变量及说明。
@@ -138,7 +148,6 @@ Skill 根目录（本文件所在目录）记为 $SKILL
 - [ ] code-section结构未改变
 - [ ] 若安装了Node.js已执行lint
 
-
 ## 主题设计原则
 
 生成主题时：
@@ -158,4 +167,6 @@ Skill 根目录（本文件所在目录）记为 $SKILL
 - 列表 [list.md](references/list.md)
 - 标题 [headline.md](references/headline.md)
 - 居中 [align_center.md](references/align-center.md)
+- Callout [callout.md](references/callout.md)
+- 公式 [math.md](references/math.md)
 - 常见问题 [faq.md](references/faq.md)

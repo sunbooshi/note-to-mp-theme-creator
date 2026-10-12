@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "lint.js",
   "scripts": {
-    "lint": "node lint.js"
+    "lint": "node lint.js",
+    "preview": "node preview.js"
   },
   "author": "sunbooshi",
   "license": "ISC",
