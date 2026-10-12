@@ -1,5 +1,8 @@
 # NoteToMP插件主题创建Skill
 
+> [!tip]
+> 1.1.0 版本新增主题预览
+
 ## 安装
 通过如下地址安装：
 
@@ -15,11 +18,7 @@ https://github.com/sunbooshi/note-to-mp-theme-creator
 - WorkBuddy
 
 
-通过如下指令调用Skill
-
-```
-/NoteToMPThemeCreator
-```
+通过 `/` 指令调用Skill
 
 
 ## 示例
