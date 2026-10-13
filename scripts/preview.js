@@ -39,6 +39,229 @@ const SKILL_DIR = path.resolve(SCRIPT_DIR, '..');
 const DEFAULT_BASE = path.join(SKILL_DIR, 'references', 'theme-full.md');
 const DEFAULT_TEMPLATE = path.join(SCRIPT_DIR, 'template.html');
 
+// NoteToMP 渲染时注入的内嵌默认样式（置于所有样式最前，便于被主题覆盖）
+const INLINE_CSS = `
+.note-light-bg {
+  padding: 1em;
+  background-color: #F7F7F7;
+  border: rgb(240, 240, 240) 1px solid;
+}
+
+.note-light-bg code {
+  font-family: Consolas,Courier,monospace;
+}
+  
+/* --------------------------------------- */
+/* callout */
+/* --------------------------------------- */
+section .note-callout {
+  border: none;
+  padding: 1em 1em 1em 1.5em;
+  display: flex;
+  flex-direction: column;
+  margin: 1em 0;
+  border-radius: 4px;
+}
+
+section .note-callout-title-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.note-callout-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;  
+}
+
+.note-callout-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+section .note-callout-title {
+  margin-left: 0.25em;
+}
+
+section .note-callout-content {
+  color: rgb(34,34,34);
+}
+
+/* note info todo */
+section .note-callout-note { 
+  color: rgb(8, 109, 221);
+  background-color: rgba(8, 109, 221, 0.1);
+}
+/* abstract tip hint */
+section .note-callout-abstract {
+  color: rgb(0, 191, 188);
+  background-color: rgba(0, 191, 188, 0.1);
+}
+section .note-callout-success {
+  color: rgb(8, 185, 78);
+  background-color: rgba(8, 185, 78, 0.1);
+}
+/* question  help, faq, warning, caution, attention */
+section .note-callout-question {
+  color: rgb(236, 117, 0);
+  background-color: rgba(236, 117, 0, 0.1);
+}
+/* failure, fail, missing, danger, error, bug */
+section .note-callout-failure {
+  color: rgb(233, 49, 71);
+  background-color: rgba(233, 49, 71, 0.1);
+}
+section .note-callout-example {
+  color: rgb(120, 82, 238);
+  background-color: rgba(120, 82, 238, 0.1);
+}
+section .note-callout-quote {
+  color: rgb(158, 158, 158);
+  background-color: rgba(158, 158, 158, 0.1);
+}
+/* custom icon callout */
+section .note-callout-custom { 
+  color: rgb(8, 109, 221);
+  background-color: rgba(8, 109, 221, 0.1);
+}
+
+/* --------------------------------------- */
+/* math */
+/* --------------------------------------- */
+.block-math-svg {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin:20px 0px;
+  max-width: 300% !important;
+}
+
+.block-math-svg svg {
+  scale: 1;
+}
+
+.block-math-section {
+  text-align: center;
+  overflow: auto;
+}
+
+.inline-math-svg svg {
+  font-size: 1em;
+  overflow: visible;
+}
+
+/* --------------------------------------- */
+/* 高亮 */
+/* --------------------------------------- */
+.note-highlight {
+  background-color: rgba(255,208,0, 0.4);
+}
+
+/* --------------------------------------- */
+/* 列表需要强制设置样式*/
+/* --------------------------------------- */
+ul {
+  list-style-type: disc;
+}
+
+.note-svg-icon {
+  min-width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+
+.note-svg-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.note-embed-excalidraw-left {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.note-embed-excalidraw-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.note-embed-excalidraw-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.note-embed-excalidraw {
+  display: inline-block;
+}
+
+.note-embed-excalidraw p {
+  line-height: 0 !important;
+  margin: 0 !important;
+}
+
+/*
+.note-embed-excalidraw svg {
+  width: 100%;
+  height: 100%;
+}
+*/
+
+.note-embed-svg-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.note-embed-svg-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.note-embed-svg-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.note-embed-svg svg {
+  width: 100%;
+  height: 100%;
+}
+
+.note-to-mp p.note-empty-line {
+  line-height: 1.2em;
+  margin-top: -0.75em;
+  margin-bottom: -0.45em;
+}
+
+.note-table {
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+}
+.note-table th {
+  min-width: 80px;
+  white-space: nowrap;
+}
+.note-table td {
+  min-width: 80px;
+}
+`;
+
 const USAGE = `用法:
   node preview.js [选项] [用户样式文件...]
 
@@ -182,18 +405,29 @@ async function compile(source, label) {
 // ---------- 生成 HTML ----------
 
 function buildHtml({ baseCss, userCss, templateHtml }) {
+  // NoteToMP 渲染时注入的内嵌默认样式：置于所有样式最前，便于被主题/用户样式覆盖
+  const inlineBlock = `<style data-theme="inline-default">
+/* ===== NoteToMP 内嵌默认样式（置于最前，可被后续样式覆盖） ===== */
+${INLINE_CSS}
+</style>
+`;
   const userBlock = userCss
     ? `\n<style data-theme="user">\n/* ===== 用户自定义样式（覆盖基础样式） ===== */\n${userCss}\n</style>\n`
     : '';
-  const htmlDoc = templateHtml.includes('<html')
-    ? templateHtml
-    : `<!DOCTYPE html>
+  let htmlDoc;
+  if (templateHtml.includes('<html')) {
+    // 完整 HTML 模板：把默认内嵌样式插到 <head> 最前面
+    htmlDoc = /<head[^>]*>/i.test(templateHtml)
+      ? templateHtml.replace(/<head[^>]*>/i, (m) => `${m}\n${inlineBlock}`)
+      : `${inlineBlock}${templateHtml}`;
+  } else {
+    htmlDoc = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NoteToMP 主题预览</title>
-<style>/* ===== 基础样式：theme-full.md ===== */\n${baseCss}\n</style>${userBlock}
+${inlineBlock}<style>/* ===== 基础样式：theme-full.md ===== */\n${baseCss}\n</style>${userBlock}
 <style data-theme="preview">
 /* ===== 预览页面容器（不作用于文章内样式） ===== */
 html, body { margin: 0; padding: 0; }
@@ -218,6 +452,7 @@ ${templateHtml}
 </body>
 </html>
 `;
+  }
   return htmlDoc;
 }
 
