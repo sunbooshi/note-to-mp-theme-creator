@@ -19,10 +19,5 @@
 	  border-bottom: rgb(90, 185, 131) 2px solid;
 	  color: rgb(90, 185, 131);
 	}
-	
-	section .note-callout-example {
-	    color: rgb(90, 185, 131);
-	    background-color: rgba(90, 185, 131, 0.1);
-	}
 }
 ```

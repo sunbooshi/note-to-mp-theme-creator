@@ -1,7 +1,7 @@
 ---
 name: note-to-mp-theme-creator
 description: 创建NoteToMP插件的自定义主题
-version: 1.1.0
+version: 1.1.1
 ---
 ## 规范
 - 使用less语法
@@ -74,6 +74,7 @@ version: 1.1.0
 - 禁止覆盖 body、html、*: 等全局选择器
 - 禁止添加浏览器私有前缀
 - 禁止使用 !important（除非已有示例明确要求）
+- 禁止生成 callout 相关选择器（如 `section .note-callout`、`.note-callout-*`、`.note-callout-icon` 等）；callout 样式不纳入生成范围，即使 `references/theme-example.md` 含该片段也不得复制
 
 ## 微信兼容性要求
 
@@ -121,7 +122,7 @@ Skill 根目录记为 $SKILL。生成主题后，可生成 HTML 预览页查看�
 1.  总结参考样式中如下内容的样式
 	- 标题：文字样式、边框样式、间距
 	- 段落：文字样式、间距
-	- 列表： marker颜色、文字样式、间距
+	- 列表： marker颜色（严格遵守[list.md](references/list.md)中的定义）、文字样式、间距
 	- 分割线
 	- 引用：文字样式、边框样式、间距
 	- 图片、图片标题
@@ -135,6 +136,10 @@ Skill 根目录记为 $SKILL。生成主题后，可生成 HTML 预览页查看�
 2.  只生成用户要求的样式
 3.  **严格**按照规范，参考示例CSS输出为markdown格式
 4.  按「语法检查」一节对输出文件执行语法检查
+
+### 以下项目的样式仅在用户明确要求时生成
+- Callout
+- 数学公式
 
 ## 最终检查
 
@@ -167,6 +172,6 @@ Skill 根目录记为 $SKILL。生成主题后，可生成 HTML 预览页查看�
 - 列表 [list.md](references/list.md)
 - 标题 [headline.md](references/headline.md)
 - 居中 [align_center.md](references/align-center.md)
-- Callout [callout.md](references/callout.md)
-- 公式 [math.md](references/math.md)
+- Callout [callout.md](references/callout.md)（默认禁用，仅当用户明确要求时方可生成）
+- 公式 [math.md](references/math.md)（默认禁用，仅当用户明确要求时方可生成）
 - 常见问题 [faq.md](references/faq.md)
